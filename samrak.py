@@ -17,7 +17,8 @@ webdriver_options = webdriver.ChromeOptions()
 webdriver_options .add_argument('headless')
 
 driver = webdriver.Chrome(
-    '/Users/WMHY/Downloads/chromedriver', options=webdriver_options)
+    '/home/ubuntu/chromedriver', options=webdriver_options) # ubuntu
+  #  '/Users/WMHY/Downloads/chromedriver', options=webdriver_options) ## macOs
 
 # =========================================================================
 url = 'http://www.nakdongcamping.com/reservation/real_time'
