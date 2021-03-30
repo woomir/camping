@@ -17,8 +17,8 @@ webdriver_options = webdriver.ChromeOptions()
 webdriver_options .add_argument('headless')
 
 driver = webdriver.Chrome(
-    '/home/ubuntu/chromedriver', options=webdriver_options) # ubuntu
-   #  '/Users/WMHY/Downloads/chromedriver', options=webdriver_options) ## masOs
+    # '/home/ubuntu/chromedriver', options=webdriver_options) ## ubuntu
+    '/Users/WMHY/Downloads/chromedriver', options=webdriver_options)  # masOs
 
 # 대저 캠핑장
 # =========================================================================
@@ -27,13 +27,26 @@ url = 'https://www.daejeocamping.com/Camp.mobiz?camptype=camp01'
 driver.get(url)
 time.sleep(0.5)
 
+# Today를 기준으로 그 이후의 주말만 검색하기
+xpath = "//input[@id='resdate']"
+driver.find_element_by_xpath(xpath).click()
+time.sleep(0.1)
+html = driver.page_source
+soup = BeautifulSoup(html, 'html.parser')
+calendarInfoTd = soup.select('table.ui-datepicker-calendar>tbody>tr>td')
+tagNumber = 0
+_today = 1
+for tag in calendarInfoTd:
+    tagNumber += 1
+    if 'ui-datepicker-today' in tag['class']:
+        _today = (tagNumber // 7) + 1
+
 # 이번달
-# thisMonthCount = []
-for i in range(1, 5):
+for i in range(_today, 5):
 
     xpath = "//input[@id='resdate']"
     driver.find_element_by_xpath(xpath).click()
-    time.sleep(0.3)
+    time.sleep(0.1)
 
     xpath = "//*[@id='ui-datepicker-div']/table/tbody/tr["+str(i)+"]/td[7]/a"
     driver.find_element_by_xpath(xpath).click()
@@ -58,11 +71,11 @@ for i in range(1, 5):
 # nextMonthCount = []
 xpath = "//input[@id='resdate']"
 driver.find_element_by_xpath(xpath).click()
-time.sleep(0.3)
+time.sleep(0.1)
 
 xpath = "//a[@data-handler='next']"
 driver.find_element_by_xpath(xpath).click()
-time.sleep(0.3)
+time.sleep(0.1)
 
 for i in range(1, 5):  # 토요일만 사이트 체크
 
@@ -87,7 +100,7 @@ for i in range(1, 5):  # 토요일만 사이트 체크
 
     xpath = "//input[@id='resdate']"
     driver.find_element_by_xpath(xpath).click()
-    time.sleep(0.3)
+    time.sleep(0.1)
 
 
 # 텔레그램에서 그룹방 별 봇 아이디 확인 방법 (chat bot name: positioncheck), 그룹방 안에서 /start로 bot을 시작해줘야 함.
