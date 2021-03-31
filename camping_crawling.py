@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import time
 import telegram
+import random
 
 
 def telegramSendMessage(month: str, week: int, siteNumber: int, camping: str):
@@ -25,7 +26,7 @@ driver = webdriver.Chrome(
 sendMessageCount = 0
 
 while sendMessageCount == 0:
-
+    sleepRandomTime = random.randrange(30, 60)
     url = 'https://www.daejeocamping.com/Camp.mobiz?camptype=camp01'
     driver.get(url)
     time.sleep(0.5)
@@ -214,5 +215,5 @@ while sendMessageCount == 0:
                 sendMessageCount += 1
             else:
                 print('삼락캠핑장:다음달 ' + str(weekNumber) + '주차 변동없음')
-    # 60초마다 실행
-    time.sleep(10)
+    # 30~60초 랜덤 실행
+    time.sleep(sleepRandomTime)
