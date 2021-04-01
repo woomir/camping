@@ -17,8 +17,8 @@ webdriver_options = webdriver.ChromeOptions()
 webdriver_options .add_argument('headless')
 
 driver = webdriver.Chrome(
-    # '/home/ubuntu/chromedriver', options=webdriver_options) ## ubuntu
-    '/Users/WMHY/Downloads/chromedriver', options=webdriver_options)  # masOs
+     '/home/ubuntu/chromedriver', options=webdriver_options) ## ubuntu
+    #'/Users/WMHY/Downloads/chromedriver', options=webdriver_options)  # masOs
 
 # 대저 캠핑장
 # =========================================================================
