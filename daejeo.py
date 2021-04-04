@@ -17,19 +17,19 @@ webdriver_options = webdriver.ChromeOptions()
 webdriver_options .add_argument('headless')
 
 driver = webdriver.Chrome(
-     '/home/ubuntu/chromedriver', options=webdriver_options) ## ubuntu
-    #'/Users/WMHY/Downloads/chromedriver', options=webdriver_options)  # masOs
+    '/home/ubuntu/chromedriver', options=webdriver_options)  # ubuntu
+# '/Users/WMHY/Downloads/chromedriver', options=webdriver_options)  # masOs
 
 # 대저 캠핑장
 # =========================================================================
-url = 'https://www.daejeocamping.com/Camp.mobiz?camptype=camp01'
-
-driver.get(url)
-time.sleep(0.5)
-
 sendMessageCount = 0
 
 while sendMessageCount == 0:
+    sleepRandomTime = random.randrange(30, 60)
+    url = 'https://www.daejeocamping.com/Camp.mobiz?camptype=camp01'
+    driver.get(url)
+    time.sleep(0.5)
+
     # Today를 기준으로 그 이후의 주말만 검색하기
     xpath = "//input[@id='resdate']"
     driver.find_element_by_xpath(xpath).click()
@@ -109,18 +109,6 @@ while sendMessageCount == 0:
         xpath = "//input[@id='resdate']"
         driver.find_element_by_xpath(xpath).click()
         time.sleep(0.1)
-
-    # 20초마다 실행
-    time.sleep(20)
-
-    # 이번달로 다시 넘어가기
-    xpath = "//input[@id='resdate']"
-    driver.find_element_by_xpath(xpath).click()
-    time.sleep(0.1)
-
-    xpath = "//a[@data-handler='prev']"
-    driver.find_element_by_xpath(xpath).click()
-    time.sleep(0.1)
 
 # 텔레그램에서 그룹방 별 봇 아이디 확인 방법 (chat bot name: positioncheck), 그룹방 안에서 /start로 bot을 시작해줘야 함.
 # chat_token = "1752254532:AAHM8-RftUAr3V5KRJ2SzaBp41G8JTTeHIE"
