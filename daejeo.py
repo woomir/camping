@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import time
 import telegram
+import random
+import datetime
 
 
 def telegramSendMessage(month: str, week: int, siteNumber: int, camping: str):
@@ -13,102 +15,165 @@ def telegramSendMessage(month: str, week: int, siteNumber: int, camping: str):
     bot.sendMessage(chat_id="-564369831", text=telegramMessageText)
 
 
+# 오늘 날짜 확인
+todayDay = datetime.datetime.now().day
+
+# 크롬 브라우저 없이 구동
 webdriver_options = webdriver.ChromeOptions()
 webdriver_options .add_argument('headless')
 
+# 크롬 실행
 driver = webdriver.Chrome(
-    '/home/ubuntu/chromedriver', options=webdriver_options)  # ubuntu
-# '/Users/WMHY/Downloads/chromedriver', options=webdriver_options)  # masOs
+    # '/home/ubuntu/chromedriver', options=webdriver_options)  # ubuntu
+    '/Users/WMHY/Downloads/chromedriver', options=webdriver_options)  # masOs
 
 # 대저 캠핑장
 # =========================================================================
 sendMessageCount = 0
 
+url = 'https://www.daejeocamping.com/Camp.mobiz?camptype=camp01'
+driver.get(url)
+time.sleep(0.5)
+
+# Today를 기준으로 그 이후의 검색 가능한 주말 찾기
+xpath = "//input[@id='resdate']"
+driver.find_element_by_xpath(xpath).click()
+time.sleep(0.1)
+html = driver.page_source
+soup = BeautifulSoup(html, 'html.parser')
+calendarInfoTd = soup.select('table.ui-datepicker-calendar>tbody>tr>td')
+
+# 이번달
+thisSatDay = []
+for j in range(1, 36):
+    if (j+1) % 7 == 0:
+        satText = calendarInfoTd[j].get_text()
+        if '\xa0' not in satText:
+            if int(satText) > todayDay:
+                thisSatDay.append(satText)
+# 이번달이 몇월인지 확인
+thisMonth = soup.select_one('span.ui-datepicker-month').get_text()
+
+# 다음달로 이동
+xpath = "//a[@data-handler='next']"
+driver.find_element_by_xpath(xpath).click()
+time.sleep(0.1)
+html = driver.page_source
+soup = BeautifulSoup(html, 'html.parser')
+calendarInfoTd = soup.select('table.ui-datepicker-calendar>tbody>tr>td')
+
+# 다음 달
+nextSatDay = []
+for j in range(1, 36):
+    if (j+1) % 7 == 0:
+        satText = calendarInfoTd[j].get_text()
+        if '\xa0' not in satText:
+            nextSatDay.append(satText)
+# 다음달이 몇월인지 확인
+nextMonth = soup.select_one('span.ui-datepicker-month').get_text()
+
+# 이번달 반복 검색할 날짜 선택
+thisSelectDay = []
+print('검색할 날짜를 선택하세요.(y나 n으로 대답하세요)')
+for i in thisSatDay:
+    answer = input(thisMonth + i + '일을 검색할까요?')
+    if 'y' in answer:
+        thisSelectDay.append(i)
+    elif 'n' in answer:
+        print('ok')
+    else:
+        print('잘못 입력했어요.')
+
+# 다음달 반복 검색할 날짜 선택
+nextSelectDay = []
+print('검색할 날짜를 선택하세요.(y로 대답하세요)')
+for i in nextSatDay:
+    answer = input(nextMonth + i + '일을 검색할까요?')
+    if 'y' in answer:
+        nextSelectDay.append(i)
+    elif 'n' in answer:
+        print('ok')
+    else:
+        print('잘못 입력했어요.')
+
+searchCount = 0
+
+# 이번달
 while sendMessageCount == 0:
     sleepRandomTime = random.randrange(30, 60)
-    url = 'https://www.daejeocamping.com/Camp.mobiz?camptype=camp01'
-    driver.get(url)
-    time.sleep(0.5)
+    for k in thisSelectDay:
+        for title in calendarInfoTd:
+            if k in title.get_text():
+                xpath = "//input[@id='resdate']"
+                driver.find_element_by_xpath(xpath).click()
+                time.sleep(0.1)
 
-    # Today를 기준으로 그 이후의 주말만 검색하기
-    xpath = "//input[@id='resdate']"
-    driver.find_element_by_xpath(xpath).click()
-    time.sleep(0.1)
-    html = driver.page_source
-    soup = BeautifulSoup(html, 'html.parser')
-    calendarInfoTd = soup.select('table.ui-datepicker-calendar>tbody>tr>td')
-    tagNumber = 0
-    _today = 1
+                arayIndex = calendarInfoTd.index(title)
+                weekNumber = (arayIndex // 7) + 1
+                dayNumber = (arayIndex % 7) + 1
 
-    for tag in calendarInfoTd:
-        tagNumber += 1
-        if 'ui-datepicker-today' in tag['class']:
-            _today = (tagNumber // 7) + 1
+                xpath = "//*[@id='ui-datepicker-div']/table/tbody/tr[" + \
+                    str(weekNumber) + "]/td[" + str(dayNumber) + "]/a"
+                driver.find_element_by_xpath(xpath).click()
+                time.sleep(0.2)
+                html = driver.page_source
+                soup = BeautifulSoup(html, 'html.parser')
+                tagSelect = soup.select_one('div.reservationbox_wrap')
+                aa = tagSelect.select('fieldset>input')
+                count = 0
+                for bb in aa:
+                    if not bb.has_attr("disabled"):
+                        count += 1
 
-    # 이번달
-    for i in range(_today, 5):
+                if count > 0:
+                    telegramSendMessage(thisMonth, k, count, '대저캠핑장')
+                    print('대저캠핑장: ' + thisMonth + ' ' +
+                          k + '일' + str(count) + '개 예약 가능')
+                    sendMessageCount += 1
+                else:
+                    print('대저캠핑장: ' + thisMonth + ' ' + k + '일 자리 없음')
+    # 찾은 횟수 카운트
+    searchCount += 1
+    print('Searching : ' + str(searchCount) + '번째')
 
-        xpath = "//input[@id='resdate']"
-        driver.find_element_by_xpath(xpath).click()
-        time.sleep(0.1)
+    # 30~60초 랜덤 실행
+    time.sleep(sleepRandomTime)
 
-        xpath = "//*[@id='ui-datepicker-div']/table/tbody/tr[" + \
-            str(i)+"]/td[7]/a"
-        driver.find_element_by_xpath(xpath).click()
-        time.sleep(0.2)
+    # # 다음 달
+    # xpath = "//input[@id='resdate']"
+    # driver.find_element_by_xpath(xpath).click()
+    # time.sleep(0.1)
 
-        html = driver.page_source
-        soup = BeautifulSoup(html, 'html.parser')
-        tagSelect = soup.select_one('div.reservationbox_wrap')
-        aa = tagSelect.select('fieldset>input')
-        count = 0
-        for title in aa:
-            if not title.has_attr("disabled"):
-                count += 1
+    # xpath = "//a[@data-handler='next']"
+    # driver.find_element_by_xpath(xpath).click()
+    # time.sleep(0.1)
 
-        if count > 0:
-            telegramSendMessage('이번달', i, count, '대저캠핑장')
-            print('대저캠핑장: 이번달 ' + str(i) + '주차에' + str(count) + '개 사이트 예약 가능')
-            sendMessageCount += 1
-        else:
-            print('대저캠핑장: 이번달 ' + str(i) + '주차 변동없음')
+    # for i in range(1, 5):  # 토요일만 사이트 체크
 
-    # 다음 달
-    # nextMonthCount = []
-    xpath = "//input[@id='resdate']"
-    driver.find_element_by_xpath(xpath).click()
-    time.sleep(0.1)
+    #     xpath = "//*[@id='ui-datepicker-div']/table/tbody/tr[" + \
+    #         str(i)+"]/td[7]/a"
+    #     driver.find_element_by_xpath(xpath).click()
+    #     time.sleep(0.2)
 
-    xpath = "//a[@data-handler='next']"
-    driver.find_element_by_xpath(xpath).click()
-    time.sleep(0.1)
+    #     html = driver.page_source
+    #     soup = BeautifulSoup(html, 'html.parser')
+    #     tagSelect = soup.select_one('div.reservationbox_wrap')
+    #     aa = tagSelect.select('fieldset>input')
+    #     count = 0
+    #     for title in aa:
+    #         if not title.has_attr("disabled"):
+    #             count += 1
 
-    for i in range(1, 5):  # 토요일만 사이트 체크
+    #     if count > 0:
+    #         telegramSendMessage('다음달', i, count, '대저캠핑장')
+    #         print('대저캠핑장: 다음달 ' + str(i) + '주차에' + str(count) + '개 사이트 예약 가능')
+    #         sendMessageCount += 1
+    #     else:
+    #         print('대저캠핑장: 다음달 ' + str(i) + '주차 변동없음')
 
-        xpath = "//*[@id='ui-datepicker-div']/table/tbody/tr[" + \
-            str(i)+"]/td[7]/a"
-        driver.find_element_by_xpath(xpath).click()
-        time.sleep(0.2)
-
-        html = driver.page_source
-        soup = BeautifulSoup(html, 'html.parser')
-        tagSelect = soup.select_one('div.reservationbox_wrap')
-        aa = tagSelect.select('fieldset>input')
-        count = 0
-        for title in aa:
-            if not title.has_attr("disabled"):
-                count += 1
-
-        if count > 0:
-            telegramSendMessage('다음달', i, count, '대저캠핑장')
-            print('대저캠핑장: 다음달 ' + str(i) + '주차에' + str(count) + '개 사이트 예약 가능')
-            sendMessageCount += 1
-        else:
-            print('대저캠핑장: 다음달 ' + str(i) + '주차 변동없음')
-
-        xpath = "//input[@id='resdate']"
-        driver.find_element_by_xpath(xpath).click()
-        time.sleep(0.1)
+    #     xpath = "//input[@id='resdate']"
+    #     driver.find_element_by_xpath(xpath).click()
+    #     time.sleep(0.1)
 
 # 텔레그램에서 그룹방 별 봇 아이디 확인 방법 (chat bot name: positioncheck), 그룹방 안에서 /start로 bot을 시작해줘야 함.
 # chat_token = "1752254532:AAHM8-RftUAr3V5KRJ2SzaBp41G8JTTeHIE"
