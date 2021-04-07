@@ -78,6 +78,11 @@ xpath = "//*[@id='wrap']/div[3]/div/ul/li[4]/a"
 driver.find_element_by_xpath(xpath).click()
 time.sleep(0.1)
 
+# 몇월인지 확인
+month = soup.find('div', {'class': 'month'})
+monthNumber = month.find('em').get_text()
+thisMonth = monthNumber[5:7]
+
 # 토요일 날짜 추출
 html = driver.page_source
 soup = BeautifulSoup(html, 'html.parser')
@@ -87,10 +92,6 @@ for text in satDay:
     if text.get_text() != '':
         satDayNumber.append(text.get_text())
 
-# 몇월인지 확인
-month = soup.find('div', {'class': 'month'})
-monthNumber = month.find('em').get_text()
-thisMonth = monthNumber[5:7]
 
 # 반복 검색할 날짜 선택
 selectDay = []
