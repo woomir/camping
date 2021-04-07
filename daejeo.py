@@ -12,7 +12,8 @@ def telegramSendMessage(month: str, day: str, siteNumber: int, camping: str):
     bot = telegram.Bot(token=chat_token)
     telegramMessageText = camping + ': ' + month + ' ' + day + \
         '일 ' + str(siteNumber) + '개 예약 가능'
-    bot.sendMessage(chat_id="-564369831", text=telegramMessageText)
+    bot.sendMessage(chat_id="-564369831", text=telegramMessageText)  # Official
+    # bot.sendMessage(chat_id="1003456250", text=telegramMessageText)  # Test
 
 
 # 오늘 날짜 확인
@@ -118,7 +119,7 @@ sendMessageCount = 0
 
 # 빈사이트 찾기 반복
 while sendMessageCount == 0:
-    sleepRandomTime = random.randrange(30, 60)
+    sleepRandomTime = random.randrange(20, 40)
     # 이번달 검색
     for k in thisSelectDay:
         for title in thisCalendarInfoTd:

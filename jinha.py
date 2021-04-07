@@ -47,7 +47,7 @@ driver = webdriver.Chrome(
 
 sendMessageCount = 0
 
-sleepRandomTime = random.randrange(30, 60)
+sleepRandomTime = random.randrange(20, 40)
 url = 'https://xn--om2bi2o9qdy7a48exzk3vf68fzzd.kr/'
 driver.get(url)
 time.sleep(0.5)
