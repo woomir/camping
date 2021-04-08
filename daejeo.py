@@ -187,9 +187,9 @@ while sendMessageCount == 0:
                 else:
                     print('대저캠핑장: ' + nextMonth + ' ' + k + '일 자리 없음')
 
-    xpath = "//input[@id='resdate']"
-    driver.find_element_by_xpath(xpath).click()
-    time.sleep(0.1)
+        xpath = "//input[@id='resdate']"
+        driver.find_element_by_xpath(xpath).click()
+        time.sleep(0.1)
 
     # 찾은 횟수 카운트
     searchCount += 1

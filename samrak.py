@@ -34,7 +34,7 @@ todayDay = datetime.datetime.now().day
 # Today를 기준으로 그 이후의 검색 가능한 주말 찾기
 xpath = "//input[@id='resdate']"
 driver.find_element_by_xpath(xpath).click()
-time.sleep(0.1)
+time.sleep(0.2)
 html = driver.page_source
 soup = BeautifulSoup(html, 'html.parser')
 thisCalendarInfoTd = soup.select('table.ui-datepicker-calendar>tbody>tr>td')
@@ -54,7 +54,7 @@ thisMonth = soup.select_one('span.ui-datepicker-month').get_text()
 # 다음달로 이동
 xpath = "//a[@data-handler='next']"
 driver.find_element_by_xpath(xpath).click()
-time.sleep(0.1)
+time.sleep(0.2)
 html = driver.page_source
 soup = BeautifulSoup(html, 'html.parser')
 nextCalendarInfoTd = soup.select('table.ui-datepicker-calendar>tbody>tr>td')
@@ -73,7 +73,7 @@ for j in satOrder:
 
 xpath = "//a[@data-handler='prev']"
 driver.find_element_by_xpath(xpath).click()
-time.sleep(0.1)
+time.sleep(0.2)
 
 # 이번달 반복 검색할 날짜 선택
 thisSelectDay = []
@@ -114,7 +114,7 @@ while sendMessageCount == 0:
                 xpath = "//*[@id='ui-datepicker-div']/table/tbody/tr[" + \
                     str(weekNumber) + "]/td[" + str(dayNumber) + "]/a"
                 driver.find_element_by_xpath(xpath).click()
-                time.sleep(0.2)
+                time.sleep(0.5)
                 html = driver.page_source
                 soup = BeautifulSoup(html, 'html.parser')
                 tagSelect = soup.select('div.click_inner')
@@ -137,11 +137,11 @@ while sendMessageCount == 0:
 
         xpath = "//input[@id='resdate']"
         driver.find_element_by_xpath(xpath).click()
-        time.sleep(0.1)
+        time.sleep(0.2)
 
     xpath = "//a[@data-handler='next']"
     driver.find_element_by_xpath(xpath).click()
-    time.sleep(0.1)
+    time.sleep(0.2)
 
     # 다음달 검색
     for k in nextSelectDay:
@@ -155,7 +155,7 @@ while sendMessageCount == 0:
                 xpath = "//*[@id='ui-datepicker-div']/table/tbody/tr[" + \
                     str(weekNumber) + "]/td[" + str(dayNumber) + "]/a"
                 driver.find_element_by_xpath(xpath).click()
-                time.sleep(0.2)
+                time.sleep(0.5)
                 html = driver.page_source
                 soup = BeautifulSoup(html, 'html.parser')
                 tagSelect = soup.select('div.click_inner')
@@ -176,9 +176,9 @@ while sendMessageCount == 0:
                 else:
                     print('삼락캠핑장: ' + nextMonth + ' ' + k + '일 자리 없음')
 
-    xpath = "//input[@id='resdate']"
-    driver.find_element_by_xpath(xpath).click()
-    time.sleep(0.1)
+        xpath = "//input[@id='resdate']"
+        driver.find_element_by_xpath(xpath).click()
+        time.sleep(0.1)
 
     # 찾은 횟수 카운트
     searchCount += 1
