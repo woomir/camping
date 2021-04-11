@@ -35,10 +35,10 @@ systemOS = platform.system()
 pathChromedriver = ''
 
 if systemOS = "Darwin":
-    pathChromedriver = '/Users/WMHY/Downloads/chromedriver'
-elif systemOS = "Windows":
+    pathChromedriver == '/Users/WMHY/Downloads/chromedriver'
+elif systemOS == "Windows":
     pathChromedriver = ''
-elif systemOS = "Linux":
+elif systemOS == "Linux":
     pathChromedriver = '/home/ubuntu/chromedriver'
 
 webdriver_options = webdriver.ChromeOptions()
