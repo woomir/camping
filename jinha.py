@@ -4,16 +4,8 @@ from selenium import webdriver
 import time
 import telegram
 import random
-
-# 텔레그램 메시지 전송 함수
-
-
-def telegramSendMessage(month: str, day: str, siteNumber: int, camping: str, areaName: str):
-    chat_token = "1752254532:AAHM8-RftUAr3V5KRJ2SzaBp41G8JTTeHIE"
-    bot = telegram.Bot(token=chat_token)
-    telegramMessageText = camping + ': ' + month + '월 ' + day + \
-        '일 ' + areaName + '에 ' + str(siteNumber) + '개의 사이트가 있습니다.'
-    bot.sendMessage(chat_id="-564369831", text=telegramMessageText)
+from telegramCustomFunc import telegramSendMessage
+import platform
 
 
 def searchAreaSite(selectDay, thisMonth, areaName):
@@ -38,12 +30,21 @@ def searchAreaSite(selectDay, thisMonth, areaName):
                   selectSatDay + '일 ' + areaName + '자리 없음.')
 
 
+# 사용자 컴퓨터 OS 확인 후 설정값 반환
+systemOS = platform.system()
+pathChromedriver = ''
+
+if systemOS = "Darwin":
+    pathChromedriver = '/Users/WMHY/Downloads/chromedriver'
+elif systemOS = "Windows":
+    pathChromedriver = ''
+elif systemOS = "Linux":
+    pathChromedriver = '/home/ubuntu/chromedriver'
+
 webdriver_options = webdriver.ChromeOptions()
 webdriver_options .add_argument('headless')
 
-driver = webdriver.Chrome(
-    # '/home/ubuntu/chromedriver', options=webdriver_options) ## ubuntu
-    '/Users/WMHY/Downloads/chromedriver', options=webdriver_options)  # masOs
+driver = webdriver.Chrome(pathChromedriver, options=webdriver_options)
 
 sendMessageCount = 0
 
@@ -78,11 +79,6 @@ xpath = "//*[@id='wrap']/div[3]/div/ul/li[4]/a"
 driver.find_element_by_xpath(xpath).click()
 time.sleep(0.1)
 
-# 몇월인지 확인
-month = soup.find('div', {'class': 'month'})
-monthNumber = month.find('em').get_text()
-thisMonth = monthNumber[5:7]
-
 # 토요일 날짜 추출
 html = driver.page_source
 soup = BeautifulSoup(html, 'html.parser')
@@ -92,6 +88,10 @@ for text in satDay:
     if text.get_text() != '':
         satDayNumber.append(text.get_text())
 
+# 몇월인지 확인
+month = soup.find('div', {'class': 'month'})
+monthNumber = month.find('em').get_text()
+thisMonth = monthNumber[5:7]
 
 # 반복 검색할 날짜 선택
 selectDay = []

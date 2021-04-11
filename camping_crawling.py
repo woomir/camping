@@ -4,6 +4,7 @@ from selenium import webdriver
 import time
 import telegram
 import random
+import datetime
 
 
 def telegramSendMessage(month: str, week: int, siteNumber: int, camping: str):
@@ -18,8 +19,8 @@ webdriver_options = webdriver.ChromeOptions()
 webdriver_options .add_argument('headless')
 
 driver = webdriver.Chrome(
-    '/home/ubuntu/chromedriver', options=webdriver_options) ## ubuntu
-    #'/Users/WMHY/Downloads/chromedriver', options=webdriver_options)  # masOs
+    '/home/ubuntu/chromedriver', options=webdriver_options)  # ubuntu
+# '/Users/WMHY/Downloads/chromedriver', options=webdriver_options)  # masOs
 
 # 대저 캠핑장
 # =========================================================================

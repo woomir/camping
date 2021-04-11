@@ -5,28 +5,27 @@ import time
 import telegram
 import random
 import datetime
+from telegramCustomFunc import telegramSendMessage
+import platform
 
+# 사용자 컴퓨터 OS 확인 후 설정값 반환
+systemOS = platform.system()
+pathChromedriver = ''
 
-def telegramSendMessage(month: str, day: str, siteNumber: int, camping: str):
-    chat_token = "1752254532:AAHM8-RftUAr3V5KRJ2SzaBp41G8JTTeHIE"
-    bot = telegram.Bot(token=chat_token)
-    telegramMessageText = camping + ': ' + month + ' ' + day + \
-        '일 ' + str(siteNumber) + '개 예약 가능'
-    bot.sendMessage(chat_id="-564369831", text=telegramMessageText)  # Official
-    # bot.sendMessage(chat_id="1003456250", text=telegramMessageText)  # Test
+if systemOS = "Darwin":
+    pathChromedriver = '/Users/WMHY/Downloads/chromedriver'
+elif systemOS = "Windows":
+    pathChromedriver = ''
+elif systemOS = "Linux":
+    pathChromedriver = '/home/ubuntu/chromedriver'
 
-
-# 오늘 날짜 확인
-todayDay = datetime.datetime.now().day
-
-# 크롬 브라우저 없이 구동
 webdriver_options = webdriver.ChromeOptions()
 webdriver_options .add_argument('headless')
 
-# 크롬 실행
-driver = webdriver.Chrome(
-    # '/home/ubuntu/chromedriver', options=webdriver_options)  # ubuntu
-    '/Users/WMHY/Downloads/chromedriver', options=webdriver_options)  # masOs
+driver = webdriver.Chrome(pathChromedriver, options=webdriver_options)
+
+# 오늘 날짜 확인
+todayDay = datetime.datetime.now().day
 
 # 대저 캠핑장
 # =========================================================================
