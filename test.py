@@ -1,20 +1,11 @@
-import platform
-
-# a = platform.system()
-
-# print(a)
+var1 = 0
 
 
-# def test(tt=0):
-#     b = 123
-#     gdf = 34
-#     qq = b + gdf + tt
-#     print(qq)
-#     return b, gdf
+def test():
+    global var1
+    var1 += 2
+    return var1
 
 
-# c = test()[1]
-# print(c)
-
-a = [1, 2, 3]
-print(a.index(1))
+test()
+print(var1)

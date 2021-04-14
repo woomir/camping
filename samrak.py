@@ -194,6 +194,8 @@ def thisAndNextMonthSearch(driver):
         driver.find_element_by_xpath(xpath).click()
         time.sleep(0.1)
 
+    return sendMessageCount
+
 
 if __name__ == '__main__':
     # 사용자 컴퓨터 OS 확인 후 설정값 반환

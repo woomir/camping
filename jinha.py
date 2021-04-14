@@ -112,6 +112,8 @@ def thisMonthSearch(driver):
                 print('진하캠핑장: ' + jinhaThisMonth + '월 ' +
                       selectSatDay + '일 ' + areaName + '자리 없음.')
 
+    return sendMessageCount
+
 
 # 사용자 컴퓨터 OS 확인 후 설정값 반환
 if __name__ == "__main__":
