@@ -142,7 +142,7 @@ def thisAndNextMonthSearch(driver):
 
                 if count > 0:
                     telegramSendMessage(samrakThisMonth, k, count, '삼락캠핑장')
-                    print('삼락캠핑장: ' + samrakTShisMonth + ' ' + k +
+                    print('삼락캠핑장: ' + samrakThisMonth + ' ' + k +
                           '일 ' + str(count) + '개 예약 가능')
                     global sendMessageCount
                     sendMessageCount += 1
