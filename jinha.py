@@ -15,7 +15,7 @@ sendMessageCount = 0
 def connectWebsite(driver):
     url = 'https://xn--om2bi2o9qdy7a48exzk3vf68fzzd.kr/'
     driver.get(url)
-    time.sleep(0.5)ssh - i "awspwd_telegramserver.pem" ubuntu@ec2-54-180-159-122.ap-northeast-2.compute.amazonaws.com
+    time.sleep(0.5)
     html = driver.page_source
     if '/login?backURL=%2F' in html:
         # 로그인 화면으로 이동
