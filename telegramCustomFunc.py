@@ -8,9 +8,7 @@ def telegramSendMessage(month: str, day: str, siteNumber: int, camping: str, are
         telegramMessageText = camping + ': ' + month + ' ' + day + \
             '일 ' + str(siteNumber) + '개 예약 가능'
     else:
-        telegramMessageText = camping + ': ' + month + '월 ' + day + \
+        telegramMessageText = camping + ': ' + month + ' ' + day + \
             '일 ' + areaName + '에 ' + str(siteNumber) + '개의 사이트가 있습니다.'
     bot.sendMessage(chat_id="-564369831", text=telegramMessageText)  # Official
     # bot.sendMessage(chat_id="1003456250", text=telegramMessageText)  # Test
-
-
